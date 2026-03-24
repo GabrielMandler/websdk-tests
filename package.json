@@ -1,0 +1,13 @@
+{
+  "name": "websdk-tests-node-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Simple Node app serving index.html",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "vconsole": "^3.15.1"
+  }
+}

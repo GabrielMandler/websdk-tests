@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hello</title>
+    <link rel="stylesheet" href="./styles.css" />
+
+    <script>
+      !function (t, e, n, s, a, c, i, o, p) {
+        t.AppsFlyerSdkObject = a, t.AF = t.AF || function () {
+          (t.AF.q = t.AF.q || []).push([Date.now()].concat(Array.prototype.slice.call(arguments)))
+        },
+        t.AF.id = t.AF.id || i, t.AF.plugins = {}
+      }
+        (window, document, "script", 0, "AF", "pba", {
+          pba: {
+            webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
+            measurementStatus: true
+          }
+        });
+  
+      window.AF_LOADER_CONFIG = {
+        // manifestUrl: "https://websdk-stg.appsflyer.com/manifest.db28d1001086e2c4d446d26b9a3bf030.json",
+        baseUrl: "https://websdk-stg.appsflyer.com",
+        plugins: ["pba", "banners"],
+        af_id: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
+        webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
+       }; 
+       
+    </script>
+    <script src="https://websdk-stg.appsflyer.com/manifestLoader.v1.js"
+    integrity="sha384-9j6illvSwuqtP7FpqftUl0x9vfuC07utFWFI9yivRVbUAQWAHl/UFoQetyTgd31p"
+    crossorigin="anonymous"></script>
+
+    <script>
+      if (typeof AF === 'function') {
+        AF("pba", "event", { eventType: "EVENT", eventName: "gabriel" });
+      } else {
+        console.error("[AppsFlyer] AF is not defined — loader script may be blocked (check SRI integrity) or failed to run.");
+      }
+    </script>
+
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <h1>Simple web app</h1>
+        <p>Console and network activity appear in the lists below, like your checklist + Network panel.</p>
+        <button id="health-btn" type="button" class="btn-primary">Test /health request</button>
+      </header>
+
+      <section class="checklist-block" aria-labelledby="console-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Log"></span>
+            <span id="console-heading" class="block-label">Console</span>
+            <span class="meta-pill" id="console-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-console" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <ul id="console-log" class="item-list" role="list"></ul>
+          <p class="sub-item-placeholder">Console output streams here as you use the app.</p>
+        </details>
+      </section>
+
+      <section class="checklist-block" aria-labelledby="network-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Network"></span>
+            <span id="network-heading" class="block-label">Network</span>
+            <span class="meta-pill" id="network-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-network" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <div class="network-wrap">
+            <div class="network-head" role="row">
+              <span>Name</span>
+              <span>Status</span>
+              <span>Type</span>
+              <span>Initiator</span>
+              <span>Size</span>
+              <span>Time</span>
+            </div>
+            <div id="network-log" class="network-body" role="list"></div>
+            <div class="network-empty" id="network-empty">No requests yet. Load the page or trigger /health.</div>
+          </div>
+        </details>
+      </section>
+    </main>
+    <script src="/node_modules/vconsole/dist/vconsole.min.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
