@@ -54,7 +54,13 @@ function requestHandler(req, res) {
   }
 
   const url = new URL(req.url, "http://localhost");
-  const requestedPath = url.pathname === "/" ? "/index.html" : url.pathname;
+  let requestedPath = url.pathname === "/" ? "/index.html" : url.pathname;
+
+  // Friendly routes for HTML pages.
+  if (url.pathname === "/index-gtm" || url.pathname === "/gtm") {
+    requestedPath = "/index-gtm.html";
+  }
+
   const normalizedPath = path.normalize(requestedPath).replace(/^(\.\.[/\\])+/, "");
   const filePath = path.join(publicDir, normalizedPath);
 

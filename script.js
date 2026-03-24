@@ -209,6 +209,17 @@ function setupResourceObserver() {
   }
 }
 
+function getHealthCheckUrl() {
+  const host = window.location.hostname.toLowerCase();
+  if (host === "localhost" || host === "127.0.0.1") {
+    return "/health";
+  }
+  if (host.endsWith(".github.io")) {
+    return "./health.json";
+  }
+  return "/health";
+}
+
 function setupConsoleCapture() {
   const methods = ["log", "info", "warn", "error", "debug"];
   for (const method of methods) {
@@ -335,8 +346,9 @@ clearNetworkBtn.addEventListener("click", () => {
 });
 
 healthBtn.addEventListener("click", async () => {
-  console.info("Triggering /health request from page button");
-  const res = await fetch("/health");
+  const healthUrl = getHealthCheckUrl();
+  console.info(`Triggering health request: ${healthUrl}`);
+  const res = await fetch(healthUrl);
   const data = await res.json();
   console.log("Health response:", data);
 });
