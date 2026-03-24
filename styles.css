@@ -308,3 +308,62 @@ body {
 .network-body:not(:empty) ~ .network-empty {
   display: none;
 }
+
+.csp-note {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.csp-link-list {
+  list-style: none;
+  margin: 0;
+  padding: 12px 14px 16px;
+}
+
+.csp-link-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.csp-link-list li:last-child {
+  border-bottom: none;
+}
+
+.csp-link-list a {
+  color: var(--info);
+  font-weight: 600;
+}
+
+.csp-link-list code {
+  font-size: 12px;
+}
+
+.csp-howto li {
+  font-size: 13px;
+}
+
+.nonce-test-panel .nonce-test-body {
+  padding: 12px 14px 16px;
+}
+
+.nonce-pending {
+  color: var(--warn);
+}
+
+.nonce-ok {
+  color: #3fb950;
+}
+
+.csp-allowlist {
+  margin: 0;
+  padding: 12px 14px 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.25);
+  border-top: 1px solid var(--border);
+}

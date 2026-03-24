@@ -60,6 +60,12 @@ function requestHandler(req, res) {
   if (url.pathname === "/index-gtm" || url.pathname === "/gtm") {
     requestedPath = "/index-gtm.html";
   }
+  if (url.pathname === "/index-csp" || url.pathname === "/csp") {
+    requestedPath = "/index-csp.html";
+  }
+  if (url.pathname === "/nonce-test") {
+    requestedPath = "/csp/nonce-test.html";
+  }
 
   const normalizedPath = path.normalize(requestedPath).replace(/^(\.\.[/\\])+/, "");
   const filePath = path.join(publicDir, normalizedPath);

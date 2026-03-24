@@ -345,13 +345,15 @@ clearNetworkBtn.addEventListener("click", () => {
   networkCountEl.textContent = "0";
 });
 
-healthBtn.addEventListener("click", async () => {
-  const healthUrl = getHealthCheckUrl();
-  console.info(`Triggering health request: ${healthUrl}`);
-  const res = await fetch(healthUrl);
-  const data = await res.json();
-  console.log("Health response:", data);
-});
+if (healthBtn) {
+  healthBtn.addEventListener("click", async () => {
+    const healthUrl = getHealthCheckUrl();
+    console.info(`Triggering health request: ${healthUrl}`);
+    const res = await fetch(healthUrl);
+    const data = await res.json();
+    console.log("Health response:", data);
+  });
+}
 
 setupConsoleCapture();
 setupNetworkCapture();

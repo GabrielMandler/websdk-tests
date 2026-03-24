@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CSP test suite (AppsFlyer Web SDK)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <h1>CSP test suite</h1>
+        <p>
+          Static pages for
+          <strong>Content-Security-Policy</strong> experiments. On GitHub Pages, policy is
+          delivered via <code>&lt;meta http-equiv="Content-Security-Policy"&gt;</code> (no
+          server headers). Use separate pages so each load gets one fixed policy — that matches
+          how you will validate on mobile and desktop browsers.
+        </p>
+        <p class="csp-note">
+          <strong>Tip:</strong> Prefer <strong>relative</strong> URLs for assets
+          (<code>./script.js</code>) so the same build works locally and under
+          <code>/repo-name/</code> on GitHub Pages.
+        </p>
+      </header>
+
+      <section class="checklist-block" style="margin-top: 8px">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true"></span>
+            <span class="block-label">Domains to allow (copy-friendly)</span>
+          </summary>
+          <pre class="csp-allowlist">script-src
+https://websdk-stg.appsflyer.com
+https://websdk.appsflyer.com
+https://cdn.appsflyer.com
+https://wa.appsflyersdk.com/coverdomain
+
+connect-src
+https://websdk-stg.appsflyer.com
+https://websdk.appsflyer.com
+https://wa.appsflyer.com
+https://wa.onelink.me
+https://wa.appsflyersdk.com/coverdomain
+
+In CSP meta/headers, use origins only (no path): https://wa.appsflyersdk.com
+That allows https://wa.appsflyersdk.com/coverdomain and any path on that host.</pre>
+        </details>
+      </section>
+
+      <section class="checklist-block" style="margin-top: 8px">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true"></span>
+            <span class="block-label">How to test multiple CSP cases</span>
+          </summary>
+          <ul class="csp-link-list csp-howto">
+            <li>
+              <strong>One URL per policy.</strong> Each HTML file ships a single
+              <code>&lt;meta http-equiv="Content-Security-Policy"&gt;</code>. The browser applies
+              it on load; you cannot switch policies without loading another page (or an iframe
+              pointing at another file).
+            </li>
+            <li>
+              <strong>Use separate tabs or devices.</strong> Open
+              <code>csp/nonce-test.html</code>, <code>csp/case-external-only.html</code>,
+              <code>csp/case-baseline.html</code> in different tabs and compare console /
+              network behavior.
+            </li>
+            <li>
+              <strong>Hard refresh</strong> (<code>Cmd+Shift+R</code> / <code>Ctrl+Shift+R</code>)
+              after you change HTML so cached documents do not hide updates.
+            </li>
+            <li>
+              <strong>DevTools:</strong> Console shows “Refused to execute inline script…” when
+              nonce/hash/hosts are wrong. Network shows blocked requests for
+              <code>connect-src</code> / <code>script-src</code>. If the SDK calls
+              <code>wa.appsflyer.com</code> (e.g. <code>/coverdomain</code>), that host must be
+              listed under <code>connect-src</code> (wildcards are not always enough across
+              browsers).
+            </li>
+            <li>
+              <strong>Mobile:</strong> Safari Web Inspector (macOS) or Chrome remote debugging
+              (USB) — load the same GitHub Pages URLs as on desktop.
+            </li>
+            <li>
+              <strong>Production vs static demo:</strong> Real sites usually send CSP as an
+              <strong>HTTP header</strong> with a fresh nonce per response. These pages use a
+              <strong>fixed</strong> nonce only so GitHub Pages can demonstrate the idea.
+            </li>
+          </ul>
+        </details>
+      </section>
+
+      <section class="checklist-block" style="margin-top: 8px">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true"></span>
+            <span class="block-label">Test cases</span>
+          </summary>
+          <ul class="csp-link-list">
+            <li>
+              <a href="./csp/nonce-test.html"><strong>Nonce test</strong> (recommended)</a>
+              — static nonce, inline checks, AppsFlyer loader via
+              <code>onload</code>.
+            </li>
+            <li>
+              <a href="./csp/case-nonce.html">Nonce + host allowlist</a>
+              — same policy as nonce test, shorter page (legacy).
+            </li>
+            <li>
+              <a href="./csp/case-external-only.html">External scripts only</a>
+              — no inline JS; bootstrap lives in
+              <code>csp/af-bootstrap.js</code> (strictest practical for static sites).
+            </li>
+            <li>
+              <a href="./csp/case-baseline.html">Baseline (permissive)</a>
+              — includes <code>'unsafe-inline'</code> for scripts to compare behavior.
+            </li>
+            <li>
+              <a href="./index.html">Main index (no CSP meta)</a>
+              — default integration reference.
+            </li>
+          </ul>
+        </details>
+      </section>
+    </main>
+  </body>
+</html>

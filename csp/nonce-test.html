@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Policy must match nonce="..." on every inline and eligible external script below. -->
+    <!-- connect-src: XHR/fetch/beacon (+ blob:). frame-src: iframes to wa/banner/etc. (default-src 'self' blocks frames without this). -->
+    <!-- Avoid "https://*.…" in script-src or connect-src — in some browsers it invalidates the whole meta CSP. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'nonce-afCspDemo2026' https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://cdn.appsflyer.com https://wa.appsflyersdk.com; style-src 'self' 'unsafe-inline'; connect-src 'self' blob: https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://wa.appsflyer.com https://wa.onelink.me https://wa.appsflyersdk.com; img-src 'self' data: https://impressions.onelink.me https://impressions.onelnk.com; font-src 'self' data:; frame-src 'self' https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://cdn.appsflyer.com https://wa.appsflyersdk.com https://wa.appsflyer.com https://wa.onelink.me; base-uri 'self'; form-action 'self';"
+    />
+    <title>CSP nonce test (AppsFlyer)</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <script nonce="afCspDemo2026">
+      (function () {
+        "use strict";
+        (function (t, e, n, s, a, c, i) {
+          t.AppsFlyerSdkObject = a;
+          t.AF =
+            t.AF ||
+            function () {
+              (t.AF.q = t.AF.q || []).push(
+                [Date.now()].concat(Array.prototype.slice.call(arguments))
+              );
+            };
+          t.AF.id = t.AF.id || i;
+          t.AF.plugins = {};
+        })(window, document, "script", 0, "AF", "pba", {
+          pba: {
+            webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
+            measurementStatus: true,
+          },
+        });
+        window.AF_LOADER_CONFIG = {
+          baseUrl: "https://websdk-stg.appsflyer.com",
+          plugins: ["pba", "banners"],
+          af_id: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
+          webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
+        };
+      })();
+    </script>
+    <script nonce="afCspDemo2026">
+      (function () {
+        var s = document.createElement("script");
+        s.src = "https://websdk-stg.appsflyer.com/manifestLoader.v1.js";
+        s.integrity =
+          "sha384-9j6illvSwuqtP7FpqftUl0x9vfuC07utFWFI9yivRVbUAQWAHl/UFoQetyTgd31p";
+        s.crossOrigin = "anonymous";
+        s.onload = function () {
+          if (typeof window.AF !== "function") {
+            console.error("[AppsFlyer] AF missing after loader (check bootstrap / CSP).");
+            return;
+          }
+          window.AF("pba", "event", {
+            eventType: "EVENT",
+            eventName: "gabriel",
+          });
+        };
+        s.onerror = function () {
+          console.error("[AppsFlyer] manifestLoader failed to load.");
+        };
+        document.head.appendChild(s);
+      })();
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <p><a href="../index-csp.html">← CSP suite</a></p>
+        <h1>CSP nonce test</h1>
+        <p>
+          This page uses a <strong>static</strong> nonce
+          <code>afCspDemo2026</code> in both the policy and every
+          <code>&lt;script nonce="…"&gt;</code>. On static hosts (GitHub Pages), per-request
+          nonces are not possible without a server.
+        </p>
+      </header>
+
+      <section class="checklist-block nonce-test-panel" aria-labelledby="nonce-panel-title">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true"></span>
+            <span id="nonce-panel-title" class="block-label">Nonce checks</span>
+          </summary>
+          <div class="nonce-test-body">
+            <p>
+              <strong>Expected token:</strong>
+              <code>afCspDemo2026</code>
+            </p>
+            <p id="nonce-inline-status" class="nonce-pending">
+              Waiting for inline script with matching nonce…
+            </p>
+            <p class="csp-note">
+              If this text never updates, an inline script was blocked (wrong or missing
+              <code>nonce</code>, or policy typo). Open DevTools → Console for CSP violation
+              messages.
+            </p>
+          </div>
+        </details>
+      </section>
+
+      <section class="checklist-block" aria-labelledby="console-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Log"></span>
+            <span id="console-heading" class="block-label">Console</span>
+            <span class="meta-pill" id="console-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-console" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <ul id="console-log" class="item-list" role="list"></ul>
+          <p class="sub-item-placeholder">Console output streams here.</p>
+        </details>
+      </section>
+      <section class="checklist-block" aria-labelledby="network-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Network"></span>
+            <span id="network-heading" class="block-label">Network</span>
+            <span class="meta-pill" id="network-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-network" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <div class="network-wrap">
+            <div class="network-head" role="row">
+              <span>Name</span>
+              <span>Status</span>
+              <span>Type</span>
+              <span>Initiator</span>
+              <span>Size</span>
+              <span>Time</span>
+            </div>
+            <div id="network-log" class="network-body" role="list"></div>
+            <div class="network-empty" id="network-empty">No requests yet.</div>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <script nonce="afCspDemo2026">
+      (function () {
+        var el = document.getElementById("nonce-inline-status");
+        if (el) {
+          el.textContent = "OK: inline script with nonce ran (CSP allows this block).";
+          el.className = "nonce-ok";
+        }
+      })();
+    </script>
+    <script
+      nonce="afCspDemo2026"
+      src="../node_modules/vconsole/dist/vconsole.min.js"
+    ></script>
+    <script nonce="afCspDemo2026" src="../script.js"></script>
+  </body>
+</html>

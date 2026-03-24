@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://cdn.appsflyer.com https://wa.appsflyersdk.com; style-src 'self' 'unsafe-inline'; connect-src 'self' blob: https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://wa.appsflyer.com https://wa.onelink.me https://wa.appsflyersdk.com; img-src 'self' data: https://impressions.onelink.me https://impressions.onelnk.com; font-src 'self' data:; frame-src 'self' https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://cdn.appsflyer.com https://wa.appsflyersdk.com https://wa.appsflyer.com https://wa.onelink.me; base-uri 'self'; form-action 'self';"
+    />
+    <title>CSP: external scripts only (AppsFlyer)</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <script src="./af-bootstrap.js"></script>
+    <script
+      src="https://websdk-stg.appsflyer.com/manifestLoader.v1.js"
+      integrity="sha384-9j6illvSwuqtP7FpqftUl0x9vfuC07utFWFI9yivRVbUAQWAHl/UFoQetyTgd31p"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./af-after-load.js"></script>
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <p><a href="../index-csp.html">← CSP suite</a></p>
+        <h1>CSP: external scripts only</h1>
+        <p>
+          No inline JavaScript. Bootstrap is <code>csp/af-bootstrap.js</code>; post-load hook
+          is <code>csp/af-after-load.js</code>. Update those files if you change loader config.
+        </p>
+      </header>
+      <section class="checklist-block" aria-labelledby="console-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Log"></span>
+            <span id="console-heading" class="block-label">Console</span>
+            <span class="meta-pill" id="console-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-console" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <ul id="console-log" class="item-list" role="list"></ul>
+          <p class="sub-item-placeholder">Console output streams here.</p>
+        </details>
+      </section>
+      <section class="checklist-block" aria-labelledby="network-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Network"></span>
+            <span id="network-heading" class="block-label">Network</span>
+            <span class="meta-pill" id="network-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-network" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <div class="network-wrap">
+            <div class="network-head" role="row">
+              <span>Name</span>
+              <span>Status</span>
+              <span>Type</span>
+              <span>Initiator</span>
+              <span>Size</span>
+              <span>Time</span>
+            </div>
+            <div id="network-log" class="network-body" role="list"></div>
+            <div class="network-empty" id="network-empty">No requests yet.</div>
+          </div>
+        </details>
+      </section>
+    </main>
+    <script src="../node_modules/vconsole/dist/vconsole.min.js"></script>
+    <script src="../script.js"></script>
+  </body>
+</html>
