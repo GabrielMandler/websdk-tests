@@ -465,3 +465,16 @@ body {
 .harness-detail.harness-err {
   color: #f85149;
 }
+
+.harness-vs-old {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.harness-vs-old.harness-vs-slower {
+  color: #f85149;
+}
+
+.harness-vs-old.harness-vs-faster {
+  color: #3fb950;
+}

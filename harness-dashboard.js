@@ -72,6 +72,50 @@
     return "—";
   }
 
+  /** Same ladder as “First events 2xx Δ” (events → any AF 2xx); no number if both missing. */
+  function comparableLatencyMs(m) {
+    if (!m) return null;
+    if (m.firstEvents2xxMs != null) return m.firstEvents2xxMs;
+    if (m.firstAf2xxMs != null) return m.firstAf2xxMs;
+    return null;
+  }
+
+  function formatVsOldCell(testId, m) {
+    const oldState = state.get("old");
+    const baseline = oldState && oldState.metrics ? comparableLatencyMs(oldState.metrics) : null;
+    if (testId === "old") {
+      return baseline != null ? "0 ms" : "—";
+    }
+    if (baseline == null) return "—";
+    const cur = comparableLatencyMs(m);
+    if (cur == null) return "—";
+    const d = Math.round(cur - baseline);
+    if (d === 0) return "0 ms";
+    return (d > 0 ? "+" : "") + d + " ms";
+  }
+
+  function refreshVsOldColumn() {
+    for (const t of HARNESS_TESTS) {
+      const tr = tbody.querySelector(`tr[data-harness-id="${t.id}"]`);
+      const cell = tr && tr.querySelector(".harness-vs-old");
+      if (!cell) continue;
+      const s = state.get(t.id);
+      const m = s && s.metrics;
+      const text = formatVsOldCell(t.id, m);
+      cell.textContent = text;
+      cell.classList.remove("harness-vs-slower", "harness-vs-faster");
+      if (t.id !== "old" && m && state.get("old") && state.get("old").metrics) {
+        const baseline = comparableLatencyMs(state.get("old").metrics);
+        const cur = comparableLatencyMs(m);
+        if (baseline != null && cur != null) {
+          const d = Math.round(cur - baseline);
+          if (d > 0) cell.classList.add("harness-vs-slower");
+          if (d < 0) cell.classList.add("harness-vs-faster");
+        }
+      }
+    }
+  }
+
   function verdict(test, m) {
     /** Adobe pages: same bar as DevTools — manifestLoader + wa.appsflyersdk.com coverdomain & events must be HTTP 2xx. */
     if (test.id && String(test.id).startsWith("adobe")) {
@@ -177,6 +221,7 @@
         <td class="harness-cell-status"><span class="harness-pill harness-pending">…</span></td>
         <td class="harness-sdk">—</td>
         <td class="harness-lat">—</td>
+        <td class="harness-vs-old">—</td>
         <td class="harness-detail muted">Waiting…</td>
       </tr>
     `;
@@ -207,6 +252,7 @@
       det.textContent = detail;
       det.className = "harness-detail" + (pillClass === "harness-fail" ? " harness-err" : "");
     }
+    refreshVsOldColumn();
   }
 
   function updateSummary() {
@@ -237,6 +283,8 @@
     const cur = state.get(testId) || { running: true };
     if (d.phase === "sdk" && d.metrics) {
       const m = d.metrics;
+      cur.metrics = m;
+      state.set(testId, cur);
       const sdkMs = m.sdkReadyMs != null ? `${Math.round(m.sdkReadyMs)} ms` : "—";
       setRow(testId, {
         status: "Running",
@@ -248,6 +296,8 @@
     }
     if (d.phase === "af-network" && d.metrics) {
       const m = d.metrics;
+      cur.metrics = m;
+      state.set(testId, cur);
       const sdkMs = m.afSdk && m.sdkReadyMs != null ? `${Math.round(m.sdkReadyMs)} ms` : "—";
       const prof = formatNetworkProfile(m.networkProfile);
       let detail = prof
