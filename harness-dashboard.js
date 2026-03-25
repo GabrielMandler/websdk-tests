@@ -28,6 +28,18 @@
       path: "./csp/case-external-only.html",
       expectAf: true,
     },
+    {
+      id: "csp-nonce-case",
+      label: "CSP nonce (case)",
+      path: "./csp/case-nonce.html",
+      expectAf: true,
+    },
+    {
+      id: "csp-nonce-test",
+      label: "CSP nonce test",
+      path: "./csp/nonce-test.html",
+      expectAf: true,
+    },
   ];
 
   const root = document.getElementById("harness-root");
