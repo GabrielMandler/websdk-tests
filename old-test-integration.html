@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Old Test Integration</title>
     <link rel="stylesheet" href="./styles.css" />
-
     <script>
       !function(t,e,n,s,a,c,i,o,p){t.AppsFlyerSdkObject=a,t.AF=t.AF||function(){
       (t.AF.q=t.AF.q||[]).push([Date.now()].concat(Array.prototype.slice.call(arguments)))},t.AF.id=t.AF.id||i,
       t.AF.plugins={},
-      o=e.createElement(n),p=e.getElementsByTagName(n)[0],o.async=1,o.src=s+"?"+(c.length>0?"st="+c.split(",").sort().join(",")+"&":"")+(i.length>0?"af_id="+i:""),
+      o=e.createElement(n),p=e.getElementsByTagName(n)[0],o.async=1,o.src=s+"?"+(c.length>0?"st="+c.split(",").sort().join(",")+"&":"")+(i&&i.length>0?"af_id="+i:""),
       p.parentNode.insertBefore(o,p)}(window,document,"script",
-      "https://cdn.appsflyer.com/web-sdk/latest/sdk.min.js?",
-      "AF","pba","testing-site-id");
+      "https://cdn.appsflyer.com/wa-staging/testSdk.unmin.js",
+      "AF","pba",{
+        pba: {
+          webAppId: "testing-site-id",
+          measurementStatus: true
+        }
+      });
     </script>
     <script>
       if (typeof AF === "function") {
