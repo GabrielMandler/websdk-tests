@@ -380,3 +380,88 @@ body {
   background: rgba(0, 0, 0, 0.25);
   border-top: 1px solid var(--border);
 }
+
+.muted {
+  color: var(--muted);
+}
+
+.harness-block .harness-intro {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 72ch;
+  line-height: 1.5;
+}
+
+.harness-rerun {
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.harness-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.harness-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.harness-table th,
+.harness-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.harness-table th {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.harness-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.harness-table .harness-cell-status {
+  white-space: nowrap;
+}
+
+.harness-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.harness-pill.harness-pending {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+}
+
+.harness-pill.harness-run {
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--info);
+}
+
+.harness-pill.harness-pass {
+  background: rgba(63, 185, 80, 0.18);
+  color: #3fb950;
+}
+
+.harness-pill.harness-fail {
+  background: rgba(248, 81, 73, 0.15);
+  color: var(--error);
+}
+
+.harness-detail.harness-err {
+  color: #f85149;
+}

@@ -13,6 +13,43 @@
         <p>Choose the test type you want to run.</p>
       </header>
 
+      <section class="checklist-block harness-block" id="harness-root" aria-labelledby="harness-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true"></span>
+            <span id="harness-heading" class="block-label">Automated harness</span>
+            <span class="meta-pill" id="harness-summary">…</span>
+          </summary>
+          <p class="harness-intro">
+            Success for AppsFlyer Web SDK (manifestLoader flow) means HTTP 2xx for manifest JSON + signature,
+            <code>coverdomain</code>, and <code>events</code> on <code>wa.appsflyersdk.com</code> (see Network →
+            Fetch/XHR). The table prefers time-to-first <strong>events</strong> 2xx as latency.
+            <strong>Adobe</strong> tests use the same requirement (manifestLoader + coverdomain + events).
+            If you see a <strong>403</strong> on <code>/manifestLoader.v1.js</code>, the Launch rule
+            is often using a <strong>relative</strong> URL — fix it to the full
+            <code>https://websdk-stg.appsflyer.com/…</code> URL.
+            <button type="button" id="harness-rerun" class="btn-ghost harness-rerun">Run again</button>
+          </p>
+          <p class="harness-intro muted" id="harness-status-line"></p>
+          <div class="harness-table-wrap">
+            <table class="harness-table" aria-describedby="harness-heading">
+              <thead>
+                <tr>
+                  <th scope="col">Test</th>
+                  <th scope="col">Result</th>
+                  <th scope="col">SDK ready Δ</th>
+                  <th scope="col">First events 2xx Δ</th>
+                  <th scope="col">Notes</th>
+                </tr>
+              </thead>
+              <tbody id="harness-tbody"></tbody>
+            </table>
+          </div>
+          <div id="harness-iframes" aria-hidden="true"></div>
+        </details>
+      </section>
+
       <section class="checklist-block" aria-labelledby="menu-heading">
         <details class="block-details" open>
           <summary class="block-summary">
@@ -30,5 +67,6 @@
         </details>
       </section>
     </main>
+    <script src="./harness-dashboard.js"></script>
   </body>
 </html>
