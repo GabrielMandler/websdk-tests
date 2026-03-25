@@ -54,8 +54,11 @@
   </head>
   <body>
     <main class="page">
+      <nav class="page-nav" aria-label="Site">
+        <a href="../index.html" class="back-link">← Test menu</a>
+        <a href="./index.html" class="back-link back-link--quiet">CSP suite</a>
+      </nav>
       <header class="hero">
-        <p><a href="../index-csp.html">← CSP suite</a></p>
         <h1>CSP: baseline (unsafe-inline)</h1>
         <p>
           Uses <code>script-src ... 'unsafe-inline'</code> so typical inline bootstrap works.

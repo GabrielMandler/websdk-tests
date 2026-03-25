@@ -357,9 +357,12 @@
     if (!host) return;
     host.innerHTML = "";
 
+    const runCacheBust = Date.now();
     HARNESS_TESTS.forEach((test, i) => {
       const sep = test.path.includes("?") ? "&" : "?";
-      const src = `${test.path}${sep}harness=1&harnessId=${encodeURIComponent(test.id)}`;
+      const src = `${test.path}${sep}harness=1&harnessId=${encodeURIComponent(
+        test.id
+      )}&_cb=${runCacheBust}`;
       const iframe = document.createElement("iframe");
       iframe.setAttribute("title", `Harness: ${test.label}`);
       iframe.setAttribute("aria-hidden", "true");

@@ -18,17 +18,11 @@
           <summary class="block-summary">
             <span class="chevron" aria-hidden="true"></span>
             <span class="brand-icon" aria-hidden="true"></span>
-            <span id="harness-heading" class="block-label">Automated harness</span>
+            <span id="harness-heading" class="block-label">Smoke test</span>
             <span class="meta-pill" id="harness-summary">…</span>
           </summary>
           <p class="harness-intro">
-            Success for AppsFlyer Web SDK (manifestLoader flow) means HTTP 2xx for manifest JSON + signature,
-            <code>coverdomain</code>, and <code>events</code> on <code>wa.appsflyersdk.com</code> (see Network →
-            Fetch/XHR). The table prefers time-to-first <strong>events</strong> 2xx as latency.
-            <strong>Adobe</strong> tests use the same requirement (manifestLoader + coverdomain + events).
-            If you see a <strong>403</strong> on <code>/manifestLoader.v1.js</code>, the Launch rule
-            is often using a <strong>relative</strong> URL — fix it to the full
-            <code>https://websdk-stg.appsflyer.com/…</code> URL.
+            Loads every integration in a hidden iframe and marks Pass/Fail when the run finishes.
             <button type="button" id="harness-rerun" class="btn-ghost harness-rerun">Run again</button>
           </p>
           <p class="harness-intro muted" id="harness-status-line"></p>
