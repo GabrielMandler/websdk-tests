@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Adobe Tags Test 3</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <script
+      src="https://assets.adobedtm.com/cc3f5fb64390/77f7189e98f7/launch-d3b79b9d2ca8-development.min.js"
+      async
+    ></script>
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <h1>Adobe Tags Test 3</h1>
+        <p>Script: launch-d3b79b9d2ca8-development.min.js</p>
+        <button id="health-btn" type="button" class="btn-primary">Test /health request</button>
+      </header>
+
+      <section class="checklist-block" aria-labelledby="console-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Log"></span>
+            <span id="console-heading" class="block-label">Console</span>
+            <span class="meta-pill" id="console-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-console" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <ul id="console-log" class="item-list" role="list"></ul>
+          <p class="sub-item-placeholder">Console output streams here as you use the app.</p>
+        </details>
+      </section>
+
+      <section class="checklist-block" aria-labelledby="network-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Network"></span>
+            <span id="network-heading" class="block-label">Network</span>
+            <span class="meta-pill" id="network-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-network" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <div class="network-wrap">
+            <div class="network-head" role="row">
+              <span>Name</span>
+              <span>Status</span>
+              <span>Type</span>
+              <span>Initiator</span>
+              <span>Size</span>
+              <span>Time</span>
+            </div>
+            <div id="network-log" class="network-body" role="list"></div>
+            <div class="network-empty" id="network-empty">No requests yet. Load the page or trigger /health.</div>
+          </div>
+        </details>
+      </section>
+    </main>
+    <script src="/node_modules/vconsole/dist/vconsole.min.js"></script>
+    <script src="../script.js"></script>
+  </body>
+</html>

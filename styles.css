@@ -51,6 +51,19 @@ body {
   max-width: 52ch;
 }
 
+.hero p.hero-note {
+  max-width: 72ch;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.hero p.hero-note code {
+  font-size: 11px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .btn-primary {
   border: 1px solid var(--border);
   background: var(--surface);

@@ -180,7 +180,35 @@ function addResourceEntry(entry) {
 
   const row = makeNetworkRowEl();
   row.querySelector(".col-name").textContent = shortUrl(entry.name);
-  row.querySelector(".col-status").textContent = "200";
+  const rs = entry.responseStatus;
+  const initiator = entry.initiatorType || "";
+  // Cross-origin script/link/img often report responseStatus 0 without Timing-Allow-Origin,
+  // even when the load succeeded — do not mark those as failed.
+  const opaqueOkTypes = new Set(["script", "link", "css", "img", "font", "other"]);
+  let statusText;
+  let isErr = false;
+  if (typeof rs === "number") {
+    if (rs >= 400) {
+      statusText = String(rs);
+      isErr = true;
+    } else if (rs === 0) {
+      if (opaqueOkTypes.has(initiator)) {
+        statusText = "—";
+        isErr = false;
+      } else {
+        statusText = "0";
+        isErr = true;
+      }
+    } else {
+      statusText = String(rs);
+    }
+  } else {
+    statusText = "—";
+  }
+  if (isErr) {
+    row.classList.add("status-err");
+  }
+  row.querySelector(".col-status").textContent = statusText;
   row.querySelector(".col-type").textContent = entry.initiatorType || "resource";
   row.querySelector(".col-initiator").textContent = entry.nextHopProtocol || "browser";
   row.querySelector(".col-size").textContent = formatSize(entry.transferSize || entry.encodedBodySize);

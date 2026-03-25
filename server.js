@@ -57,14 +57,32 @@ function requestHandler(req, res) {
   let requestedPath = url.pathname === "/" ? "/index.html" : url.pathname;
 
   // Friendly routes for HTML pages.
-  if (url.pathname === "/index-gtm" || url.pathname === "/gtm") {
-    requestedPath = "/index-gtm.html";
+  if (url.pathname === "/index-gtm" || url.pathname === "/gtm" || url.pathname === "/gtm/") {
+    requestedPath = "/gtm/index.html";
   }
-  if (url.pathname === "/index-csp" || url.pathname === "/csp") {
-    requestedPath = "/index-csp.html";
+  if (url.pathname === "/index-csp" || url.pathname === "/csp" || url.pathname === "/csp/") {
+    requestedPath = "/csp/index.html";
   }
   if (url.pathname === "/nonce-test") {
     requestedPath = "/csp/nonce-test.html";
+  }
+  if (url.pathname === "/index-adobe" || url.pathname === "/adobe" || url.pathname === "/adobe/") {
+    requestedPath = "/adobe/index.html";
+  }
+  if (url.pathname === "/index-adobe-1" || url.pathname === "/adobe-1") {
+    requestedPath = "/adobe/adobe-1.html";
+  }
+  if (url.pathname === "/index-adobe-2" || url.pathname === "/adobe-2") {
+    requestedPath = "/adobe/adobe-2.html";
+  }
+  if (url.pathname === "/index-adobe-3" || url.pathname === "/adobe-3") {
+    requestedPath = "/adobe/adobe-3.html";
+  }
+  if (url.pathname === "/simple") {
+    requestedPath = "/simple-test.html";
+  }
+  if (url.pathname === "/old-test-integration") {
+    requestedPath = "/old-test-integration.html";
   }
 
   const normalizedPath = path.normalize(requestedPath).replace(/^(\.\.[/\\])+/, "");

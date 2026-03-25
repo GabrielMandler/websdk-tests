@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CSP test suite (AppsFlyer Web SDK)</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <h1>CSP test suite</h1>
+        <p>
+          Static pages for
+          <strong>Content-Security-Policy</strong> experiments. On GitHub Pages, policy is
+          delivered via <code>&lt;meta http-equiv="Content-Security-Policy"&gt;</code> (no
+          server headers). Use separate pages so each load gets one fixed policy.
+        </p>
+      </header>
+
+      <section class="checklist-block" style="margin-top: 8px">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true"></span>
+            <span class="block-label">Domains to allow (copy-friendly)</span>
+          </summary>
+          <pre class="csp-allowlist">script-src
+https://websdk-stg.appsflyer.com
+https://websdk.appsflyer.com
+https://cdn.appsflyer.com
+https://wa.appsflyersdk.com/coverdomain
+
+connect-src
+https://websdk-stg.appsflyer.com
+https://websdk.appsflyer.com
+https://wa.appsflyer.com
+https://wa.onelink.me
+https://wa.appsflyersdk.com/coverdomain
+
+In CSP meta/headers, use origins only (no path): https://wa.appsflyersdk.com
+That allows https://wa.appsflyersdk.com/coverdomain and any path on that host.</pre>
+        </details>
+      </section>
+
+      <section class="checklist-block" style="margin-top: 8px">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true"></span>
+            <span class="block-label">Test cases</span>
+          </summary>
+          <ul class="csp-link-list">
+            <li><a href="./nonce-test.html"><strong>Nonce test</strong> (recommended)</a></li>
+            <li><a href="./case-nonce.html">Nonce + host allowlist</a></li>
+            <li><a href="./case-external-only.html">External scripts only</a></li>
+            <li><a href="./case-baseline.html">Baseline (permissive)</a></li>
+            <li><a href="../index.html">Main menu</a></li>
+          </ul>
+        </details>
+      </section>
+    </main>
+  </body>
+</html>

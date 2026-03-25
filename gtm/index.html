@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GTM Test</title>
+    <link rel="stylesheet" href="../styles.css" />
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-KVPB53DJ");
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <h1>Google Tag Manager test</h1>
+        <p>Console and network activity appear in the lists below.</p>
+        <button id="health-btn" type="button" class="btn-primary">Test /health request</button>
+      </header>
+
+      <section class="checklist-block" aria-labelledby="console-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Log"></span>
+            <span id="console-heading" class="block-label">Console</span>
+            <span class="meta-pill" id="console-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-console" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <ul id="console-log" class="item-list" role="list"></ul>
+          <p class="sub-item-placeholder">Console output streams here as you use the app.</p>
+        </details>
+      </section>
+
+      <section class="checklist-block" aria-labelledby="network-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Network"></span>
+            <span id="network-heading" class="block-label">Network</span>
+            <span class="meta-pill" id="network-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-network" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <div class="network-wrap">
+            <div class="network-head" role="row">
+              <span>Name</span>
+              <span>Status</span>
+              <span>Type</span>
+              <span>Initiator</span>
+              <span>Size</span>
+              <span>Time</span>
+            </div>
+            <div id="network-log" class="network-body" role="list"></div>
+            <div class="network-empty" id="network-empty">No requests yet. Load the page or trigger /health.</div>
+          </div>
+        </details>
+      </section>
+    </main>
+    <script src="/node_modules/vconsole/dist/vconsole.min.js"></script>
+    <script src="../script.js"></script>
+  </body>
+</html>
