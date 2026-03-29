@@ -12,9 +12,18 @@ let consoleTotal = 0;
 let networkTotal = 0;
 const seenResourceEntries = new Set();
 
-if (typeof window.VConsole === "function") {
-  window.__vconsole = new window.VConsole();
-}
+(function initVConsole() {
+  try {
+    if (new URLSearchParams(window.location.search).get("vconsole") === "0") {
+      return;
+    }
+    if (typeof window.VConsole === "function") {
+      window.__vconsole = new window.VConsole();
+    }
+  } catch (_err) {
+    /* VConsole can throw SecurityError when touching cross-origin iframes (e.g. third-party SDK). */
+  }
+})();
 
 function now() {
   return new Date().toLocaleTimeString(undefined, {
@@ -386,5 +395,25 @@ if (healthBtn) {
 setupConsoleCapture();
 setupNetworkCapture();
 setupResourceObserver();
+
+function setupDdSdkMetrics() {
+  if (
+    !window.ddSdkMetrics ||
+    typeof window.ddSdkMetrics.markSdkReady !== "function"
+  ) {
+    return;
+  }
+  const poll = setInterval(() => {
+    if (typeof window.AF === "function") {
+      clearInterval(poll);
+      window.ddSdkMetrics.markSdkReady();
+    }
+  }, 40);
+  setTimeout(() => {
+    clearInterval(poll);
+  }, 15000);
+}
+
+setupDdSdkMetrics();
 
 console.log("Console and network monitor initialized.");

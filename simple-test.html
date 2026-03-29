@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Simple Test Integration</title>
     <link rel="stylesheet" href="./styles.css" />
-
+    <script>
+      window.__DD_SDK_METRICS__ = window.__DD_SDK_METRICS__ || {};
+      window.__DD_SDK_METRICS__.sdkScriptPattern =
+        "(websdk-stg\\.appsflyer\\.com|websdk\\.appsflyersdk\\.com|cdn\\.appsflyer\\.com)";
+    </script>
+    <script src="./sdk-metrics.js"></script>
     <script>
       (function () {
         "use strict";
@@ -60,6 +65,44 @@
         <button id="health-btn" type="button" class="btn-primary">Test /health request</button>
       </header>
 
+      <section
+        class="checklist-block dd-metrics-section"
+        aria-labelledby="dd-metrics-heading"
+        data-testid="dd-sdk-metrics-section"
+      >
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Metrics"></span>
+            <span id="dd-metrics-heading" class="block-label">SDK performance (Datadog)</span>
+            <span class="meta-pill" id="dd-metrics-status-pill">—</span>
+          </summary>
+          <p class="sub-item-placeholder dd-metrics-intro">
+            Timings use the Performance API (resource timing, marks). First SDK request matches coverdomain or
+            <code>*.appsflyersdk.com/…/events</code> by default; override via
+            <code>window.__DD_SDK_METRICS__</code>.
+          </p>
+          <div
+            id="dd-sdk-metrics"
+            data-testid="dd-sdk-metrics"
+            data-status="pending"
+            aria-live="polite"
+          ></div>
+          <table class="dd-metrics-table" data-testid="dd-sdk-metrics-table">
+            <caption class="visually-hidden">
+              SDK performance metrics for synthetic browser tests
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Metric</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody id="dd-sdk-metrics-tbody"></tbody>
+          </table>
+        </details>
+      </section>
+
       <section class="checklist-block" aria-labelledby="console-heading">
         <details class="block-details" open>
           <summary class="block-summary">
@@ -103,7 +146,10 @@
       </section>
     </main>
     <script src="./harness-bridge.js"></script>
-    <script src="/node_modules/vconsole/dist/vconsole.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/vconsole@3.15.1/dist/vconsole.min.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="./script.js"></script>
   </body>
 </html>
