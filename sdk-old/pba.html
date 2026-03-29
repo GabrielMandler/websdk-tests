@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Old — PBA</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <script src="../sdk-metrics.js"></script>
+    <script>
+      !function(t,e,n,s,a,c,i,o,p){t.AppsFlyerSdkObject=a,t.AF=t.AF||function(){
+      (t.AF.q=t.AF.q||[]).push([Date.now()].concat(Array.prototype.slice.call(arguments)))},
+      t.AF.id=t.AF.id||i,t.AF.plugins={},o=e.createElement(n),p=e.getElementsByTagName(n)[0],o.async=1,
+      o.src="https://websdk.appsflyersdk.com?"+(c.length>0?"st="+c.split(",").sort().join(",")+"&":"")+(i.length>0?"af_id="+i:""),
+      p.parentNode.insertBefore(o,p)}(window,document,"script",0,"AF","pba",{pba: {webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f", measurementStatus: false}})
+    </script>
+    <script>
+      if (typeof AF === "function") {
+        AF("pba", "event", { eventType: "EVENT", eventName: "cdn-pba-test" });
+      }
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <nav class="page-nav" aria-label="Site">
+        <a href="../index.html" class="back-link">← Test menu</a>
+      </nav>
+      <header class="hero">
+        <h1>Old — PBA only</h1>
+        <p>Old CDN SDK with People-Based Attribution plugin only.</p>
+        <button id="health-btn" type="button" class="btn-primary">Test /health request</button>
+      </header>
+
+      <section
+        class="checklist-block dd-metrics-section"
+        aria-labelledby="dd-metrics-heading"
+        data-testid="dd-sdk-metrics-section"
+      >
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Metrics"></span>
+            <span id="dd-metrics-heading" class="block-label">SDK performance (Datadog)</span>
+            <span class="meta-pill" id="dd-metrics-status-pill">—</span>
+          </summary>
+          <p class="sub-item-placeholder dd-metrics-intro">
+            Timings use the Performance API (resource timing, marks). First SDK request matches coverdomain or
+            <code>*.appsflyersdk.com/…/events</code> by default; override via
+            <code>window.__DD_SDK_METRICS__</code>.
+          </p>
+          <div
+            id="dd-sdk-metrics"
+            data-testid="dd-sdk-metrics"
+            data-status="pending"
+            aria-live="polite"
+          ></div>
+          <table class="dd-metrics-table" data-testid="dd-sdk-metrics-table">
+            <caption class="visually-hidden">
+              SDK performance metrics for synthetic browser tests
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Metric</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody id="dd-sdk-metrics-tbody"></tbody>
+          </table>
+        </details>
+      </section>
+
+      <section class="checklist-block" aria-labelledby="console-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Log"></span>
+            <span id="console-heading" class="block-label">Console</span>
+            <span class="meta-pill" id="console-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-console" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <ul id="console-log" class="item-list" role="list"></ul>
+          <p class="sub-item-placeholder">Console output streams here as you use the app.</p>
+        </details>
+      </section>
+
+      <section class="checklist-block" aria-labelledby="network-heading">
+        <details class="block-details" open>
+          <summary class="block-summary">
+            <span class="chevron" aria-hidden="true"></span>
+            <span class="brand-icon" aria-hidden="true" title="Network"></span>
+            <span id="network-heading" class="block-label">Network</span>
+            <span class="meta-pill" id="network-count">0</span>
+          </summary>
+          <div class="block-toolbar">
+            <button id="clear-network" type="button" class="btn-ghost">Clear</button>
+          </div>
+          <div class="network-wrap">
+            <div class="network-head" role="row">
+              <span>Name</span>
+              <span>Status</span>
+              <span>Type</span>
+              <span>Initiator</span>
+              <span>Size</span>
+              <span>Time</span>
+            </div>
+            <div id="network-log" class="network-body" role="list"></div>
+            <div class="network-empty" id="network-empty">No requests yet. Load the page or trigger /health.</div>
+          </div>
+        </details>
+      </section>
+    </main>
+    <script src="../harness-bridge.js"></script>
+    <script src="../script.js"></script>
+  </body>
+</html>
