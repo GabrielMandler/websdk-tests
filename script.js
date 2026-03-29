@@ -12,17 +12,32 @@ let consoleTotal = 0;
 let networkTotal = 0;
 const seenResourceEntries = new Set();
 
-(function initVConsole() {
-  try {
-    if (new URLSearchParams(window.location.search).get("vconsole") === "0") {
-      return;
+/**
+ * VConsole walks the DOM and can touch cross-origin iframes (e.g. AppsFlyer), which throws
+ * SecurityError — including after init. Only load on localhost or ?vconsole=1 (not on GitHub Pages / Datadog).
+ */
+(function loadVConsoleOptional() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("vconsole") === "0") return;
+  const enabled =
+    params.get("vconsole") === "1" ||
+    /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+  if (!enabled) return;
+
+  const s = document.createElement("script");
+  s.src = "https://cdn.jsdelivr.net/npm/vconsole@3.15.1/dist/vconsole.min.js";
+  s.crossOrigin = "anonymous";
+  s.async = true;
+  s.onload = function () {
+    try {
+      if (typeof window.VConsole === "function") {
+        window.__vconsole = new window.VConsole();
+      }
+    } catch (_err) {
+      /* ignore */
     }
-    if (typeof window.VConsole === "function") {
-      window.__vconsole = new window.VConsole();
-    }
-  } catch (_err) {
-    /* VConsole can throw SecurityError when touching cross-origin iframes (e.g. third-party SDK). */
-  }
+  };
+  document.head.appendChild(s);
 })();
 
 function now() {
