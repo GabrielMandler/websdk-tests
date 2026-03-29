@@ -9,6 +9,8 @@
       window.__DD_SDK_METRICS__ = window.__DD_SDK_METRICS__ || {};
       window.__DD_SDK_METRICS__.sdkScriptPattern =
         "(websdk-stg\\.appsflyer\\.com|websdk\\.appsflyersdk\\.com|cdn\\.appsflyer\\.com)";
+      window.__DD_SDK_METRICS__.firstRequestPattern =
+        "(coverdomain|appsflyersdk\\.com.*/events|banner\\.appsflyersdk\\.com.*/creative/list)";
     </script>
     <script src="../sdk-metrics.js"></script>
     <script>
@@ -73,9 +75,9 @@
             <span class="meta-pill" id="dd-metrics-status-pill">—</span>
           </summary>
           <p class="sub-item-placeholder dd-metrics-intro">
-            Timings use the Performance API (resource timing, marks). First SDK request matches coverdomain or
-            <code>*.appsflyersdk.com/…/events</code> by default; override via
-            <code>window.__DD_SDK_METRICS__</code>.
+            Timings use the Performance API (resource timing, marks). First SDK request matches coverdomain,
+            <code>*.appsflyersdk.com/…/events</code>, or <code>banner.appsflyersdk.com/…/creative/list</code>;
+            override via <code>window.__DD_SDK_METRICS__</code>.
           </p>
           <div
             id="dd-sdk-metrics"
