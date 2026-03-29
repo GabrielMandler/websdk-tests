@@ -21,9 +21,14 @@
       measurementStatus: true,
     },
   });
+  /* Banners: SDK touches cross-origin iframes → SecurityError in strict browsers / iframes. Opt-in: ?banners=1 */
+  var _afPlugins =
+    new URLSearchParams(window.location.search).get("banners") === "1"
+      ? ["pba", "banners"]
+      : ["pba"];
   window.AF_LOADER_CONFIG = {
     baseUrl: "https://websdk-stg.appsflyer.com",
-    plugins: ["pba", "banners"],
+    plugins: _afPlugins,
     af_id: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
     webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
   };

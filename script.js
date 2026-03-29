@@ -418,6 +418,11 @@ function setupDdSdkMetrics() {
   ) {
     return;
   }
+  const g = window.__DD_SDK_METRICS__ || {};
+  const finalizeMs =
+    typeof g.finalizeTimeoutMs === "number" && Number.isFinite(g.finalizeTimeoutMs)
+      ? Math.min(120000, Math.max(5000, g.finalizeTimeoutMs))
+      : 30000;
   const poll = setInterval(() => {
     if (typeof window.AF === "function") {
       clearInterval(poll);
@@ -426,7 +431,7 @@ function setupDdSdkMetrics() {
   }, 40);
   setTimeout(() => {
     clearInterval(poll);
-  }, 15000);
+  }, finalizeMs + 5000);
 }
 
 setupDdSdkMetrics();

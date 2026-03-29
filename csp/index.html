@@ -33,6 +33,7 @@ https://websdk-stg.appsflyer.com
 https://websdk.appsflyer.com
 https://cdn.appsflyer.com
 https://wa.appsflyersdk.com/coverdomain
+https://www.datadoghq-browser-agent.com
 
 connect-src
 https://websdk-stg.appsflyer.com
@@ -40,9 +41,13 @@ https://websdk.appsflyer.com
 https://wa.appsflyer.com
 https://wa.onelink.me
 https://wa.appsflyersdk.com/coverdomain
+https://browser-intake-datadoghq.com
 
 In CSP meta/headers, use origins only (no path): https://wa.appsflyersdk.com
-That allows https://wa.appsflyersdk.com/coverdomain and any path on that host.</pre>
+That allows https://wa.appsflyersdk.com/coverdomain and any path on that host.
+
+Datadog (RUM / Browser SDK, US1): add script + connect hosts above. EU/AP1 use
+different intake hosts (e.g. browser-intake-datadoghq.eu) — see Datadog CSP docs.</pre>
         </details>
       </section>
 

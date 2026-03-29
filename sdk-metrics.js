@@ -76,7 +76,17 @@
               }
             }
           : defaultSdkScriptMatch;
-    return { firstRequestMatch: first, sdkScriptMatch: sdkScript };
+    var ft = g.finalizeTimeoutMs;
+    var finalizeTimeoutMs =
+      typeof ft === "number" && Number.isFinite(ft)
+        ? Math.min(120000, Math.max(5000, ft))
+        : 30000;
+
+    return {
+      firstRequestMatch: first,
+      sdkScriptMatch: sdkScript,
+      finalizeTimeoutMs: finalizeTimeoutMs,
+    };
   }
 
   function roundMs(t) {
@@ -133,7 +143,7 @@
 
   DdSdkMetricsCollector.prototype._scheduleFinalize = function () {
     var self = this;
-    var FINAL_MS = 15000;
+    var FINAL_MS = this.opts.finalizeTimeoutMs;
     setTimeout(function () {
       if (self._finalized) return;
       self._finalized = true;

@@ -8,7 +8,7 @@
     <!-- Avoid "https://*.…" in script-src or connect-src — in some browsers it invalidates the whole meta CSP. -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'nonce-afCspDemo2026' https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://cdn.appsflyer.com https://wa.appsflyersdk.com; style-src 'self' 'unsafe-inline'; connect-src 'self' blob: https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://wa.appsflyer.com https://wa.onelink.me https://wa.appsflyersdk.com; img-src 'self' data: https://impressions.onelink.me https://impressions.onelnk.com; font-src 'self' data:; frame-src 'self' https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://cdn.appsflyer.com https://wa.appsflyersdk.com https://wa.appsflyer.com https://wa.onelink.me; base-uri 'self'; form-action 'self';"
+      content="default-src 'self'; script-src 'nonce-afCspDemo2026' https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://cdn.appsflyer.com https://wa.appsflyersdk.com https://www.datadoghq-browser-agent.com; style-src 'self' 'unsafe-inline'; connect-src 'self' blob: https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://wa.appsflyer.com https://wa.onelink.me https://wa.appsflyersdk.com https://browser-intake-datadoghq.com; img-src 'self' data: https://impressions.onelink.me https://impressions.onelnk.com; font-src 'self' data:; frame-src 'self' https://websdk-stg.appsflyer.com https://websdk.appsflyer.com https://cdn.appsflyer.com https://wa.appsflyersdk.com https://wa.appsflyer.com https://wa.onelink.me; base-uri 'self'; form-action 'self';"
     />
     <title>CSP nonce test (AppsFlyer)</title>
     <link rel="stylesheet" href="../styles.css" />
@@ -32,9 +32,13 @@
             measurementStatus: true,
           },
         });
+        var _afPlugins =
+          new URLSearchParams(window.location.search).get("banners") === "1"
+            ? ["pba", "banners"]
+            : ["pba"];
         window.AF_LOADER_CONFIG = {
           baseUrl: "https://websdk-stg.appsflyer.com",
-          plugins: ["pba", "banners"],
+          plugins: _afPlugins,
           af_id: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
           webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
         };
