@@ -20,6 +20,7 @@
   const metrics = {
     path: window.location.pathname,
     afSdk: false,
+    sdkInitMs: null,
     sdkReadyMs: null,
     firstAf2xxMs: null,
     /** Time to first HTTP 2xx on wa.appsflyersdk.com/.../events (SDK “fire” in DevTools). */
@@ -35,6 +36,7 @@
       manifestSig2xx: false,
       coverdomain2xx: false,
       events2xx: 0,
+      banners2xx: false,
     },
     /** CDN wa-staging testSdk bundle loaded (script tag; may be opaque responseStatus 0). */
     cdnTestSdkScriptOk: false,
@@ -48,6 +50,14 @@
     /** That request reported HTTP 2xx (responseStatus or inferred). */
     manifestLoaderHttp2xx: false,
   };
+
+  function markSdkInit(ms) {
+    if (typeof ms !== "number") return;
+    if (metrics.sdkInitMs == null || ms < metrics.sdkInitMs) {
+      metrics.sdkInitMs = ms;
+      metrics.sdkReadyMs = ms;
+    }
+  }
 
   function isAfHost(hostname) {
     return /appsflyer\.com$/i.test(hostname) || /appsflyersdk\.com$/i.test(hostname);
@@ -87,6 +97,7 @@
     metrics.manifestLoaderRequestSeen = true;
     if (typeof status === "number" && status >= 200 && status < 300) {
       metrics.manifestLoaderHttp2xx = true;
+      markSdkInit(performance.now());
     } else if (typeof status === "number" && status >= 400) {
       metrics.relativeManifestLoaderFailed = true;
     }
@@ -97,12 +108,20 @@
     if (!isManifestLoaderV1Url(e.name)) return;
     metrics.manifestLoaderRequestSeen = true;
     const rs = e.responseStatus;
+    const hasBody =
+      (e.decodedBodySize != null && e.decodedBodySize > 0) ||
+      (e.transferSize != null && e.transferSize > 0);
     if (typeof rs === "number") {
       if (rs >= 200 && rs < 300) {
         metrics.manifestLoaderHttp2xx = true;
+        markSdkInit(e.responseEnd);
       } else if (rs >= 400) {
         metrics.relativeManifestLoaderFailed = true;
       }
+    }
+    if (!metrics.manifestLoaderHttp2xx && !metrics.relativeManifestLoaderFailed && rs === 0 && hasBody) {
+      metrics.manifestLoaderHttp2xx = true;
+      markSdkInit(e.responseEnd);
     }
     post({ phase: "af-network", metrics: { ...metrics } });
   }
@@ -131,17 +150,20 @@
       ) {
         return "events";
       }
+      if (/banner\.appsflyersdk\.com$/i.test(u.hostname) && /\/creative\/list/i.test(path)) {
+        return "banners";
+      }
     } catch {
       return null;
     }
     return null;
   }
 
-  function bumpNetworkProfile(url, status, ok) {
+  function bumpNetworkProfile(url, status, ok, ms) {
     if (!ok || status < 200 || status >= 300) return;
     const kind = classifyAfRequest(url);
     if (!kind) return;
-    const ms = performance.now();
+    if (typeof ms !== "number") ms = performance.now();
     const p = metrics.networkProfile;
     if (kind === "manifestJson") {
       p.manifestJson2xx = true;
@@ -154,13 +176,15 @@
       if (metrics.firstEvents2xxMs === null) {
         metrics.firstEvents2xxMs = ms;
       }
+    } else if (kind === "banners") {
+      p.banners2xx = true;
     }
   }
 
-  function recordAf(url, status, ok, kind) {
+  function recordAf(url, status, ok, kind, ms) {
     if (!isAfUrl(url)) return;
 
-    const ms = performance.now();
+    if (typeof ms !== "number") ms = performance.now();
     if (metrics.samples.length < 24) {
       metrics.samples.push({
         kind,
@@ -176,7 +200,11 @@
       if (metrics.firstAf2xxMs === null) {
         metrics.firstAf2xxMs = ms;
       }
-      bumpNetworkProfile(url, status, true);
+      const kindName = classifyAfRequest(url);
+      if (kindName && kindName !== "events") {
+        markSdkInit(ms);
+      }
+      bumpNetworkProfile(url, status, true, ms);
     } else if (!ok || status === 0 || status >= 400) {
       metrics.afFailCount += 1;
     }
@@ -265,7 +293,7 @@
             const rs = e.responseStatus;
             if (typeof rs !== "number") continue;
             const ok = rs >= 200 && rs < 300;
-            recordAf(e.name, rs, ok, it);
+            recordAf(e.name, rs, ok, it, e.responseEnd);
             continue;
           }
           if (it !== "script") continue;
@@ -278,12 +306,13 @@
           const ok = okHttp || opaqueLoaded;
           if (!ok) {
             if (typeof rs === "number" && rs >= 400) {
-              recordAf(e.name, rs, false, "script");
+              recordAf(e.name, rs, false, "script", e.responseEnd);
             }
             continue;
           }
           const statusForRow = okHttp ? rs : 200;
-          recordAf(e.name, statusForRow, true, "script");
+          recordAf(e.name, statusForRow, true, "script", e.responseEnd);
+          markSdkInit(e.responseEnd);
           if (isCdnWaStagingTestSdk(e.name)) {
             metrics.cdnTestSdkScriptOk = true;
           }
@@ -298,7 +327,9 @@
   const afPoll = setInterval(() => {
     if (typeof window.AF === "function" && !metrics.afSdk) {
       metrics.afSdk = true;
-      metrics.sdkReadyMs = performance.now();
+      if (metrics.sdkReadyMs == null) {
+        metrics.sdkReadyMs = performance.now();
+      }
       post({ phase: "sdk", metrics: { ...metrics } });
     }
   }, 40);
@@ -312,6 +343,13 @@
       metrics.afSdk = true;
       if (metrics.sdkReadyMs === null) {
         metrics.sdkReadyMs = performance.now();
+      }
+    }
+    if (metrics.sdkInitMs == null) {
+      if (metrics.manifestLoaderHttp2xx) {
+        metrics.sdkInitMs = metrics.sdkReadyMs;
+      } else if (metrics.firstAf2xxMs != null) {
+        metrics.sdkInitMs = metrics.firstAf2xxMs;
       }
     }
     post({ phase: "done", metrics: { ...metrics } });

@@ -40,6 +40,12 @@
       path: "./csp/nonce-test.html",
       expectAf: true,
     },
+    { id: "old-pba", label: "Old \u2014 PBA", path: "./sdk-old/pba.html", expectAf: true, loader: "cdnTestSdk" },
+    { id: "old-banners", label: "Old \u2014 Banners", path: "./sdk-old/banners.html", expectAf: true, loader: "cdnTestSdk" },
+    { id: "old-pba-banners", label: "Old \u2014 PBA + Banners", path: "./sdk-old/pba-banners.html", expectAf: true, loader: "cdnTestSdk" },
+    { id: "new-pba", label: "New \u2014 PBA", path: "./sdk-new/pba.html", expectAf: true },
+    { id: "new-banners", label: "New \u2014 Banners", path: "./sdk-new/banners.html", expectAf: true },
+    { id: "new-pba-banners", label: "New \u2014 PBA + Banners", path: "./sdk-new/pba-banners.html", expectAf: true },
   ];
 
   const root = document.getElementById("harness-root");
@@ -58,8 +64,9 @@
     if (p.manifestJson2xx) parts.push("manifest.json");
     if (p.manifestSig2xx) parts.push(".sig");
     if (p.coverdomain2xx) parts.push("coverdomain");
-    if (p.events2xx) parts.push(`events×${p.events2xx}`);
-    return parts.join(" · ");
+    if (p.events2xx) parts.push(`events\u00d7${p.events2xx}`);
+    if (p.banners2xx) parts.push("banners");
+    return parts.join(" \u00b7 ");
   }
 
   function latencyMsText(m) {
@@ -73,6 +80,13 @@
   }
 
   /** Same ladder as “First events 2xx Δ” (events → any AF 2xx); no number if both missing. */
+  function sdkInitMs(m) {
+    if (!m) return null;
+    if (m.sdkInitMs != null) return m.sdkInitMs;
+    if (m.sdkReadyMs != null) return m.sdkReadyMs;
+    return null;
+  }
+
   function comparableLatencyMs(m) {
     if (!m) return null;
     if (m.firstEvents2xxMs != null) return m.firstEvents2xxMs;
@@ -199,6 +213,12 @@
         detail: `Network OK: ${formatNetworkProfile(p)} (manifest may be cache-only)`,
       };
     }
+    if (p.banners2xx) {
+      return {
+        pass: true,
+        detail: `Banners OK: ${formatNetworkProfile(p)}`,
+      };
+    }
     if (m.firstAf2xxMs != null && m.af2xxCount > 0) {
       return {
         pass: true,
@@ -285,7 +305,7 @@
       const m = d.metrics;
       cur.metrics = m;
       state.set(testId, cur);
-      const sdkMs = m.sdkReadyMs != null ? `${Math.round(m.sdkReadyMs)} ms` : "—";
+      const sdkMs = sdkInitMs(m) != null ? `${Math.round(sdkInitMs(m))} ms` : "—";
       setRow(testId, {
         status: "Running",
         sdkText: m.afSdk ? sdkMs : "—",
@@ -298,7 +318,7 @@
       const m = d.metrics;
       cur.metrics = m;
       state.set(testId, cur);
-      const sdkMs = m.afSdk && m.sdkReadyMs != null ? `${Math.round(m.sdkReadyMs)} ms` : "—";
+      const sdkMs = m.afSdk && sdkInitMs(m) != null ? `${Math.round(sdkInitMs(m))} ms` : "—";
       const prof = formatNetworkProfile(m.networkProfile);
       let detail = prof
         ? `${prof} · ok ${m.af2xxCount}/${m.afFailCount} fail`
@@ -322,7 +342,7 @@
       cur.pass = v.pass;
       state.set(testId, cur);
 
-      const sdkMs = m.afSdk && m.sdkReadyMs != null ? `${Math.round(m.sdkReadyMs)} ms` : "—";
+      const sdkMs = m.afSdk && sdkInitMs(m) != null ? `${Math.round(sdkInitMs(m))} ms` : "—";
       setRow(testId, {
         status: v.pass ? "Pass" : "Fail",
         sdkText: sdkMs,

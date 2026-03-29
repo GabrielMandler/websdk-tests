@@ -102,6 +102,12 @@ function requestHandler(req, res) {
   if (url.pathname === "/old-test-integration") {
     requestedPath = "/old-test-integration.html";
   }
+  if (url.pathname === "/sdk-old" || url.pathname === "/sdk-old/") {
+    requestedPath = "/sdk-old/index.html";
+  }
+  if (url.pathname === "/sdk-new" || url.pathname === "/sdk-new/") {
+    requestedPath = "/sdk-new/index.html";
+  }
 
   const normalizedPath = path.normalize(requestedPath).replace(/^(\.\.[/\\])+/, "");
   const filePath = path.join(publicDir, normalizedPath);
