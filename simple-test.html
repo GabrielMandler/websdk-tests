@@ -9,6 +9,8 @@
       window.__DD_SDK_METRICS__ = window.__DD_SDK_METRICS__ || {};
       window.__DD_SDK_METRICS__.sdkScriptPattern =
         "(websdk-stg\\.appsflyer\\.com|websdk\\.appsflyersdk\\.com|cdn\\.appsflyer\\.com)";
+      window.__DD_SDK_METRICS__.sdkBundlePattern =
+        "websdk\\.\\w+\\.js";
       /* Synthetics (e.g. Datadog) are often slower than local; allow coverdomain before finalize. */
       window.__DD_SDK_METRICS__.finalizeTimeoutMs = 45000;
     </script>
@@ -85,9 +87,9 @@
             <span class="meta-pill" id="dd-metrics-status-pill">—</span>
           </summary>
           <p class="sub-item-placeholder dd-metrics-intro">
-            Timings use the Performance API (resource timing, marks). First SDK request matches coverdomain or
-            <code>*.appsflyersdk.com/…/events</code> by default; override via
-            <code>window.__DD_SDK_METRICS__</code>.
+            CDN fetch = loader script download. SDK bundle fetch = main SDK bundle download.
+            SDK ready = real SDK replaces the stub. First response 200 = first API request returns HTTP 200.
+            Override patterns via <code>window.__DD_SDK_METRICS__</code>.
           </p>
           <div
             id="dd-sdk-metrics"

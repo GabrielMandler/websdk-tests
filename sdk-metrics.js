@@ -76,6 +76,18 @@
               }
             }
           : defaultSdkScriptMatch;
+    var sdkBundle =
+      typeof g.sdkBundleMatch === "function"
+        ? g.sdkBundleMatch
+        : typeof g.sdkBundlePattern === "string"
+          ? function (url) {
+              try {
+                return new RegExp(g.sdkBundlePattern, "i").test(String(url));
+              } catch (_e) {
+                return false;
+              }
+            }
+          : null;
     var ft = g.finalizeTimeoutMs;
     var finalizeTimeoutMs =
       typeof ft === "number" && Number.isFinite(ft)
@@ -85,8 +97,20 @@
     return {
       firstRequestMatch: first,
       sdkScriptMatch: sdkScript,
+      sdkBundleMatch: sdkBundle,
       finalizeTimeoutMs: finalizeTimeoutMs,
     };
+  }
+
+  function shortUrlLabel(url) {
+    if (!url) return "";
+    try {
+      var u = new URL(url, location.href);
+      var name = u.pathname.split("/").pop() || u.pathname;
+      return name + (u.search ? u.search.slice(0, 30) : "");
+    } catch (_e) {
+      return String(url).slice(0, 60);
+    }
   }
 
   function roundMs(t) {
@@ -98,13 +122,18 @@
     this.opts = parseOptions();
     this._pageStartMarked = false;
     this._cdnDone = false;
+    this._sdkBundleDone = false;
     this._sdkReadyDone = false;
     this._firstReqDone = false;
     this._firstResponse200Done = false;
     this._finalized = false;
 
     this.cdnFetchMs = null;
+    this.cdnFetchUrl = null;
     this.cdnReason = null;
+    this.sdkBundleFetchMs = null;
+    this.sdkBundleUrl = null;
+    this.sdkBundleReason = null;
     this.sdkReadyMs = null;
     this.sdkReadyReason = null;
     this.firstRequestStartMs = null;
@@ -153,6 +182,12 @@
             "no script resource matched SDK CDN URL pattern (websdk.appsflyersdk.com)";
         }
       }
+      if (self.opts.sdkBundleMatch && !self._sdkBundleDone) {
+        if (!self.sdkBundleReason) {
+          self.sdkBundleReason =
+            "no script resource matched SDK bundle pattern within timeout";
+        }
+      }
       if (!self._firstReqDone) {
         if (!self.firstRequestReason) {
           self.firstRequestReason =
@@ -187,6 +222,7 @@
     if (e.initiatorType !== "script") return;
     if (!this.opts.sdkScriptMatch(e.name)) return;
     this._cdnDone = true;
+    this.cdnFetchUrl = e.name;
     var re = e.responseEnd;
     this.cdnFetchMs = roundMs(re);
     if (this.cdnFetchMs == null) {
@@ -196,6 +232,31 @@
     markWithTime("sdk_cdn_fetch_done", re);
     try {
       performance.measure("sdk_cdn_fetch", {
+        start: navStartMs(),
+        end: re,
+      });
+    } catch (_err) {
+      /* ignore */
+    }
+    this._syncDom();
+  };
+
+  DdSdkMetricsCollector.prototype._processSdkBundle = function (e) {
+    if (!this.opts.sdkBundleMatch) return;
+    if (this._sdkBundleDone) return;
+    if (e.initiatorType !== "script") return;
+    if (!this.opts.sdkBundleMatch(e.name)) return;
+    this._sdkBundleDone = true;
+    this.sdkBundleUrl = e.name;
+    var re = e.responseEnd;
+    this.sdkBundleFetchMs = roundMs(re);
+    if (this.sdkBundleFetchMs == null) {
+      this.sdkBundleReason = "resource missing responseEnd";
+      return;
+    }
+    markWithTime("sdk_bundle_fetch_done", re);
+    try {
+      performance.measure("sdk_bundle_fetch", {
         start: navStartMs(),
         end: re,
       });
@@ -332,6 +393,7 @@
   DdSdkMetricsCollector.prototype._onResource = function (e) {
     if (e.entryType !== "resource") return;
     this._processSdkScript(e);
+    this._processSdkBundle(e);
     this._captureFirstRequest(e);
   };
 
@@ -349,6 +411,9 @@
     if (!("PerformanceObserver" in window)) {
       if (!this._cdnDone) {
         this.cdnReason = "PerformanceObserver not supported";
+      }
+      if (this.opts.sdkBundleMatch && !this._sdkBundleDone) {
+        this.sdkBundleReason = "PerformanceObserver not supported";
       }
       if (!this._firstReqDone) {
         this.firstRequestReason = "PerformanceObserver not supported";
@@ -543,6 +608,17 @@
     setData("cdn-fetch-ms", this.cdnFetchMs);
     setData("cdn-fetch-state", this.cdnFetchMs != null ? "ok" : "unavailable");
     setData("cdn-fetch-reason", this.cdnReason || "");
+    setData("cdn-fetch-url", this.cdnFetchUrl || "");
+
+    setData("sdk-bundle-fetch-ms", this.sdkBundleFetchMs);
+    setData(
+      "sdk-bundle-fetch-state",
+      this.opts.sdkBundleMatch
+        ? (this.sdkBundleFetchMs != null ? "ok" : "pending")
+        : "n/a"
+    );
+    setData("sdk-bundle-fetch-reason", this.sdkBundleReason || "");
+    setData("sdk-bundle-fetch-url", this.sdkBundleUrl || "");
 
     setData("sdk-ready-ms", this.sdkReadyMs);
     setData("sdk-ready-state", this.sdkReadyMs != null ? "ok" : "pending");
@@ -569,6 +645,9 @@
     var summary = {
       status: status,
       cdn_fetch_ms: this.cdnFetchMs,
+      cdn_fetch_url: this.cdnFetchUrl,
+      sdk_bundle_fetch_ms: this.sdkBundleFetchMs,
+      sdk_bundle_url: this.sdkBundleUrl,
       sdk_ready_ms: this.sdkReadyMs,
       first_request_start_ms: this.firstRequestStartMs,
       first_response_200_ms: this.firstResponse200Ms,
@@ -625,22 +704,57 @@
             ? " (check HTTP status)"
             : " (see reasons on #dd-sdk-metrics data attributes)";
 
+    var cdnSub = this.cdnReason
+      ? " " + this.cdnReason
+      : this.cdnFetchUrl
+        ? " " + shortUrlLabel(this.cdnFetchUrl)
+        : "";
+    var bundleSub = !this.opts.sdkBundleMatch
+      ? " not applicable (single-script SDK)"
+      : this.sdkBundleReason
+        ? " " + this.sdkBundleReason
+        : this.sdkBundleUrl
+          ? " " + shortUrlLabel(this.sdkBundleUrl)
+          : "";
+    var sdkReadySub = this.sdkReadyReason
+      ? " " + this.sdkReadyReason
+      : this.sdkReadyMs != null
+        ? " real SDK initialized"
+        : "";
+    var reqStartSub = this.firstRequestReason
+      ? " " + this.firstRequestReason
+      : this.firstRequestUrl
+        ? " " + shortUrlLabel(this.firstRequestUrl)
+        : "";
+    var resp200Sub = this.response200Reason
+      ? " " + this.response200Reason
+      : this.firstRequestUrl
+        ? " " + shortUrlLabel(this.firstRequestUrl)
+        : "";
+
     tbody.innerHTML =
       cell("Status", st + statusNote, "") +
       cell(
         "CDN fetch",
         this.cdnFetchMs != null ? this.cdnFetchMs + " ms" : null,
-        this.cdnReason ? " " + this.cdnReason : ""
+        cdnSub
+      ) +
+      cell(
+        "SDK bundle fetch",
+        this.opts.sdkBundleMatch
+          ? (this.sdkBundleFetchMs != null ? this.sdkBundleFetchMs + " ms" : null)
+          : "N/A",
+        bundleSub
       ) +
       cell(
         "SDK ready",
         this.sdkReadyMs != null ? this.sdkReadyMs + " ms" : null,
-        this.sdkReadyReason ? " " + this.sdkReadyReason : ""
+        sdkReadySub
       ) +
       cell(
         "Request start",
         this.firstRequestStartMs != null ? this.firstRequestStartMs + " ms" : null,
-        this.firstRequestReason ? " " + this.firstRequestReason : ""
+        reqStartSub
       ) +
       cell(
         "Timing detail",
@@ -667,7 +781,7 @@
       cell(
         "First response 200",
         this.firstResponse200Ms != null ? this.firstResponse200Ms + " ms" : null,
-        this.response200Reason ? " " + this.response200Reason : ""
+        resp200Sub
       );
   };
 

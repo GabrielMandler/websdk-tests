@@ -44,9 +44,9 @@
             <span class="meta-pill" id="dd-metrics-status-pill">—</span>
           </summary>
           <p class="sub-item-placeholder dd-metrics-intro">
-            Timings use the Performance API (resource timing, marks). First SDK request matches coverdomain or
-            <code>*.appsflyersdk.com/…/events</code> by default; override via
-            <code>window.__DD_SDK_METRICS__</code>.
+            CDN fetch = SDK script download. SDK ready = real SDK replaces the stub.
+            First response 200 = first API request returns HTTP 200.
+            Override patterns via <code>window.__DD_SDK_METRICS__</code>.
           </p>
           <div
             id="dd-sdk-metrics"

@@ -423,8 +423,9 @@ function setupDdSdkMetrics() {
     typeof g.finalizeTimeoutMs === "number" && Number.isFinite(g.finalizeTimeoutMs)
       ? Math.min(120000, Math.max(5000, g.finalizeTimeoutMs))
       : 30000;
+  const stubAF = window.AF;
   const poll = setInterval(() => {
-    if (typeof window.AF === "function") {
+    if (typeof window.AF === "function" && window.AF !== stubAF) {
       clearInterval(poll);
       window.ddSdkMetrics.markSdkReady();
     }
