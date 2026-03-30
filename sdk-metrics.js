@@ -704,85 +704,23 @@
             ? " (check HTTP status)"
             : " (see reasons on #dd-sdk-metrics data attributes)";
 
-    var cdnSub = this.cdnReason
-      ? " " + this.cdnReason
-      : this.cdnFetchUrl
-        ? " " + shortUrlLabel(this.cdnFetchUrl)
-        : "";
-    var bundleSub = !this.opts.sdkBundleMatch
-      ? " not applicable (single-script SDK)"
-      : this.sdkBundleReason
-        ? " " + this.sdkBundleReason
-        : this.sdkBundleUrl
-          ? " " + shortUrlLabel(this.sdkBundleUrl)
-          : "";
-    var sdkReadySub = this.sdkReadyReason
-      ? " " + this.sdkReadyReason
-      : this.sdkReadyMs != null
-        ? " real SDK initialized"
-        : "";
-    var reqStartSub = this.firstRequestReason
-      ? " " + this.firstRequestReason
-      : this.firstRequestUrl
-        ? " " + shortUrlLabel(this.firstRequestUrl)
-        : "";
-    var resp200Sub = this.response200Reason
-      ? " " + this.response200Reason
-      : this.firstRequestUrl
-        ? " " + shortUrlLabel(this.firstRequestUrl)
-        : "";
-
     tbody.innerHTML =
       cell("Status", st + statusNote, "") +
-      cell(
-        "CDN fetch",
-        this.cdnFetchMs != null ? this.cdnFetchMs + " ms" : null,
-        cdnSub
-      ) +
+      cell("CDN fetch", this.cdnFetchMs != null ? this.cdnFetchMs + " ms" : null, "") +
       cell(
         "SDK bundle fetch",
         this.opts.sdkBundleMatch
           ? (this.sdkBundleFetchMs != null ? this.sdkBundleFetchMs + " ms" : null)
           : "N/A",
-        bundleSub
-      ) +
-      cell(
-        "SDK ready",
-        this.sdkReadyMs != null ? this.sdkReadyMs + " ms" : null,
-        sdkReadySub
-      ) +
-      cell(
-        "Request start",
-        this.firstRequestStartMs != null ? this.firstRequestStartMs + " ms" : null,
-        reqStartSub
-      ) +
-      cell(
-        "Timing detail",
-        this.firstRequestTimingDetail || "—",
         ""
       ) +
-      cell("TTFB", this.firstRequestTtfbMs != null ? this.firstRequestTtfbMs + " ms" : null,
-        this.firstRequestTimingDetail === "partial_no_tao" && this.firstRequestTtfbMs == null
-          ? " not exposed without Timing-Allow-Origin"
-          : ""
-      ) +
-      cell(
-        "Download",
-        this.firstRequestDownloadMs != null ? this.firstRequestDownloadMs + " ms" : null,
-        this.firstRequestTimingDetail === "partial_no_tao" && this.firstRequestDownloadMs == null
-          ? " not exposed without Timing-Allow-Origin"
-          : ""
-      ) +
-      cell(
-        "Total",
-        this.firstRequestTotalMs != null ? this.firstRequestTotalMs + " ms" : null,
-        ""
-      ) +
-      cell(
-        "First response 200",
-        this.firstResponse200Ms != null ? this.firstResponse200Ms + " ms" : null,
-        resp200Sub
-      );
+      cell("SDK ready", this.sdkReadyMs != null ? this.sdkReadyMs + " ms" : null, "") +
+      cell("Request start", this.firstRequestStartMs != null ? this.firstRequestStartMs + " ms" : null, "") +
+      cell("Timing detail", this.firstRequestTimingDetail || "—", "") +
+      cell("TTFB", this.firstRequestTtfbMs != null ? this.firstRequestTtfbMs + " ms" : null, "") +
+      cell("Download", this.firstRequestDownloadMs != null ? this.firstRequestDownloadMs + " ms" : null, "") +
+      cell("Total", this.firstRequestTotalMs != null ? this.firstRequestTotalMs + " ms" : null, "") +
+      cell("First response 200", this.firstResponse200Ms != null ? this.firstResponse200Ms + " ms" : null, "");
   };
 
   window.DdSdkMetricsCollector = DdSdkMetricsCollector;
