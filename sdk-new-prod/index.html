@@ -14,9 +14,10 @@
       <header class="hero">
         <h1>SDK Plugins — New (production)</h1>
         <p>
-          Production manifestLoader (<code>manifestLoader.v1.js</code> on
-          <code>websdk.appsflyersdk.com</code>) with PBA / Banners combinations. For CSP builds, inject
-          <code>nonce</code> on <code>AF_LOADER_CONFIG</code> to match <code>script-src</code>.
+          Production manifestLoader: queue + <code>AF_LOADER_CONFIG</code>, then inject
+          <code>manifestLoader.v1.js</code> with SRI and <code>crossOrigin=&quot;anonymous&quot;</code> (needs CDN
+          CORS). For CSP, add <code>nonce</code> on <code>AF_LOADER_CONFIG</code> to match
+          <code>script-src</code>.
         </p>
       </header>
 

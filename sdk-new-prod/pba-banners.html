@@ -14,40 +14,40 @@
     </script>
     <script src="../sdk-metrics.js"></script>
     <script>
-      (function () {
-        "use strict";
-        (function (t, e, n, s, a, c, i) {
-          t.AppsFlyerSdkObject = a;
-          t.AF =
-            t.AF ||
-            function () {
-              (t.AF.q = t.AF.q || []).push(
-                [Date.now()].concat(Array.prototype.slice.call(arguments))
-              );
-            };
-          t.AF.id = t.AF.id || i;
-          t.AF.plugins = {};
-        })(window, document, "script", 0, "AF", "pba,banners", {
-          pba: {
-            webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
-            measurementStatus: true,
-          },
-          banners: {
-            key: "3c98cb5d-2896-4b01-8e35-f31b7c8f08c2",
-          },
-        });
-        window.AF_LOADER_CONFIG = {
-          baseUrl: "https://websdk.appsflyersdk.com",
-          plugins: ["pba", "banners"],
-          af_id: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
-          webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
+      window.AppsFlyerSdkObject = "AF";
+      window.AF =
+        window.AF ||
+        function () {
+          (window.AF.q = window.AF.q || []).push(
+            [Date.now()].concat(Array.prototype.slice.call(arguments))
+          );
         };
-      })();
+      window.AF.id = window.AF.id || {
+        pba: {
+          webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
+          measurementStatus: true,
+        },
+        banners: {
+          key: "3c98cb5d-2896-4b01-8e35-f31b7c8f08c2",
+        },
+      };
+      window.AF.plugins = {};
+
+      window.AF_LOADER_CONFIG = {
+        baseUrl: "https://websdk.appsflyersdk.com",
+        plugins: ["pba", "banners"],
+        af_id: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
+        webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
+      };
+
+      var loaderScript = document.createElement("script");
+      loaderScript.src = "https://websdk.appsflyersdk.com/manifestLoader.v1.js";
+      loaderScript.integrity =
+        "sha384-Uncl2YwvjFpFz0PwEfl3bL/0JsOQcDFEpwXHzcN0MBavn9vvFEx5pZxADTq8h+CV";
+      loaderScript.crossOrigin = "anonymous";
+      loaderScript.async = true;
+      document.head.appendChild(loaderScript);
     </script>
-    <script
-      src="https://websdk.appsflyersdk.com/manifestLoader.v1.js"
-      integrity="sha384-Uncl2YwvjFpFz0PwEfl3bL/0JsOQcDFEpwXHzcN0MBavn9vvFEx5pZxADTq8h+CV"
-    ></script>
     <script>
       if (typeof AF === "function") {
         AF("pba", "event", { eventType: "EVENT", eventName: "loader-pba-banners-prod" });
