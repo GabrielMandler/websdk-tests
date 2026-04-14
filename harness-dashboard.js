@@ -46,6 +46,14 @@
     { id: "new-pba", label: "New \u2014 PBA", path: "./sdk-new/pba.html", expectAf: true },
     { id: "new-banners", label: "New \u2014 Banners", path: "./sdk-new/banners.html", expectAf: true },
     { id: "new-pba-banners", label: "New \u2014 PBA + Banners", path: "./sdk-new/pba-banners.html", expectAf: true },
+    { id: "new-prod-pba", label: "New (Prod) \u2014 PBA", path: "./sdk-new-prod/pba.html", expectAf: true },
+    { id: "new-prod-banners", label: "New (Prod) \u2014 Banners", path: "./sdk-new-prod/banners.html", expectAf: true },
+    {
+      id: "new-prod-pba-banners",
+      label: "New (Prod) \u2014 PBA + Banners",
+      path: "./sdk-new-prod/pba-banners.html",
+      expectAf: true,
+    },
   ];
 
   const root = document.getElementById("harness-root");

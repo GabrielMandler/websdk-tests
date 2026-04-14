@@ -3,18 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Simple Test Integration</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <title>New (Prod) — PBA</title>
+    <link rel="stylesheet" href="../styles.css" />
     <script>
       window.__DD_SDK_METRICS__ = window.__DD_SDK_METRICS__ || {};
       window.__DD_SDK_METRICS__.sdkScriptPattern =
-        "(websdk-stg\\.appsflyer\\.com|websdk\\.appsflyersdk\\.com|cdn\\.appsflyer\\.com)";
-      window.__DD_SDK_METRICS__.sdkBundlePattern =
-        "websdk\\.\\w+\\.js";
-      /* Synthetics (e.g. Datadog) are often slower than local; allow coverdomain before finalize. */
-      window.__DD_SDK_METRICS__.finalizeTimeoutMs = 45000;
+        "(websdk\\.appsflyersdk\\.com|websdk-stg\\.appsflyer\\.com|cdn\\.appsflyer\\.com)";
     </script>
-    <script src="./sdk-metrics.js"></script>
+    <script src="../sdk-metrics.js"></script>
     <script>
       (function () {
         "use strict";
@@ -32,48 +28,36 @@
         })(window, document, "script", 0, "AF", "pba", {
           pba: {
             webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
-            /* measurement=0 may reduce init that touches cross-origin frames (try in Datadog / strict env). */
-            measurementStatus:
-              new URLSearchParams(window.location.search).get("measurement") !==
-              "0",
+            measurementStatus: true,
           },
         });
-        /* Banners plugin walks cross-origin iframes → SecurityError (e.g. in iframe / Synthetics). Use ?banners=1 to re-enable. */
-        var _afPlugins =
-          new URLSearchParams(window.location.search).get("banners") === "1"
-            ? ["pba", "banners"]
-            : ["pba"];
         window.AF_LOADER_CONFIG = {
-          baseUrl: "https://websdk-stg.appsflyer.com",
-          plugins: _afPlugins,
+          baseUrl: "https://websdk.appsflyersdk.com",
+          plugins: ["pba"],
           af_id: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
           webAppId: "04fe1c0e-a88e-417c-908f-8cd8d53cdb3f",
         };
       })();
     </script>
     <script
-      src="https://websdk-stg.appsflyer.com/manifestLoader.v1.js"
-      integrity="sha384-9j6illvSwuqtP7FpqftUl0x9vfuC07utFWFI9yivRVbUAQWAHl/UFoQetyTgd31p"
+      src="https://websdk.appsflyersdk.com/manifestLoader.v1.js"
+      integrity="sha384-Uncl2YwvjFpFz0PwEfl3bL/0JsOQcDFEpwXHzcN0MBavn9vvFEx5pZxADTq8h+CV"
       crossorigin="anonymous"
     ></script>
     <script>
       if (typeof AF === "function") {
-        AF("pba", "event", { eventType: "EVENT", eventName: "gabriel" });
-      } else {
-        console.error(
-          "[AppsFlyer] AF is not defined — loader script may be blocked (check SRI integrity) or failed to run."
-        );
+        AF("pba", "event", { eventType: "EVENT", eventName: "loader-pba-prod" });
       }
     </script>
   </head>
   <body>
     <main class="page">
       <nav class="page-nav" aria-label="Site">
-        <a href="./index.html" class="back-link">← Test menu</a>
+        <a href="../index.html" class="back-link">← Test menu</a>
       </nav>
       <header class="hero">
-        <h1>Simple test integration</h1>
-        <p>Current AppsFlyer integration behavior with console/network monitor.</p>
+        <h1>New (Prod) — PBA only</h1>
+        <p>Production manifestLoader with People-Based Attribution plugin only.</p>
         <button id="health-btn" type="button" class="btn-primary">Test /health request</button>
       </header>
 
@@ -90,9 +74,9 @@
             <span class="meta-pill" id="dd-metrics-status-pill">—</span>
           </summary>
           <p class="sub-item-placeholder dd-metrics-intro">
-            CDN fetch = loader script download. SDK bundle fetch = main SDK bundle download.
-            SDK ready = real SDK replaces the stub. First response 200 = first API request returns HTTP 200.
-            Override patterns via <code>window.__DD_SDK_METRICS__</code>.
+            Timings use the Performance API (resource timing, marks). First SDK request matches coverdomain or
+            <code>*.appsflyersdk.com/…/events</code> by default; override via
+            <code>window.__DD_SDK_METRICS__</code>.
           </p>
           <div
             id="dd-sdk-metrics"
@@ -157,7 +141,7 @@
         </details>
       </section>
     </main>
-    <script src="./harness-bridge.js"></script>
-    <script src="./script.js"></script>
+    <script src="../harness-bridge.js"></script>
+    <script src="../script.js"></script>
   </body>
 </html>
